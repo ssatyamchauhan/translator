@@ -25,7 +25,7 @@ async function main() {
         let dataToInsert = [];
         console.log('skip', count, 'limit', count+10, dataToInsert.length)
         for (let d of mh_data) {
-            if (d.village_names && d.village_names.length) {
+            if (d.village_names && d.village_names.length && Array.isArray(d.village_names)) {
                 const village_name_en = [];
                 for (let village of d.village_names) {
                     const translated_data = await translate(village)
@@ -42,7 +42,7 @@ async function main() {
 
                 d.primary_data = primary_data;
             }
-            if (d.seller_lessor_details && d.seller_lessor_details.length) {
+            if (d.seller_lessor_details && d.seller_lessor_details.length && Array.isArray(d.seller_lessor_details)) {
                 const seller_details = [];
                 for (let seller of d.seller_lessor_details) {
                     let new_seller = seller;
@@ -127,7 +127,7 @@ async function main() {
                 }
             }
 
-            if (d.property_details && d.property_details.length) {
+            if (d.property_details && d.property_details.length && !Array.isArray(d.property_details)) {
                 const property_details_en = await translate(d.property_details);
                 if (property_details_en) {
                     d.property_details = property_details_en;

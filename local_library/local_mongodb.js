@@ -3,7 +3,7 @@ const { MongoClient } = require('mongodb');
 let db = null;
 
 const connect = async () => {
-    const client = new MongoClient(`mongodb://localhost:27017/brant`, { useUnifiedTopology: true });
+    const client = new MongoClient(`mongodb://localhost:27017/DB`, { useUnifiedTopology: true });
 
     try {
         const clientConnection = await client.connect();

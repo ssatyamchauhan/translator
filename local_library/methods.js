@@ -2,7 +2,7 @@ const db = require("./local_mongodb");
 
 const Find_local = async (tableName, condition = {}, skip = 0, limit = 10, sort = null) => {
     try {
-        sort = !sort ? { updatedAt: -1 } : sort;
+        sort = !sort ? {} : sort;
         return await (await db()).collection(tableName).find(condition).sort(sort).skip(skip).limit(limit).toArray();
     } catch (error) {
         console.error("Error fetching data")
