@@ -19,6 +19,9 @@ async function processBatchOfData(skip, limit) {
       const englishDb = client.db(dbName);
 
       const marathiDbData = await marathiDb.collection(marathiCollection).find().skip(skip).limit(limit).toArray();
+      if (marathiData && marathiData.length == 0) {
+            return false;
+      }
       let marathiData = []
       for(let doc of marathiDbData) {
             if(doc && doc.pdf_data) {
@@ -81,7 +84,13 @@ async function convertNestedObjectToEnglish(obj) {
       return Object.fromEntries(keys.map((key, index) => [key, englishValues[index]]));
 }
 
-setInterval(async () => {
-      await processBatchOfData(0, limit);
-      skip += limit
+let interval = ""
+
+interval = setInterval(async () => {
+      const response = await processBatchOfData(0, limit);
+      if(response == false) {
+           clearInterval(interval); 
+      } else {
+            skip += limit
+      }
 }, 20000);
