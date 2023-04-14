@@ -17,13 +17,19 @@ async function processBatchOfData(skip, limit) {
       const marathiDb = client.db(dbName);
       const englishDb = client.db(dbName);
 
-      let marathiData = await marathiDb.collection(marathiCollection).find().skip(skip).limit(limit).toArray();
-      for(let doc of marathiData) {
+      const marathiDbData = await marathiDb.collection(marathiCollection).find().skip(skip).limit(limit).toArray();
+      let marathiData = []
+      for(let doc of marathiDbData) {
             if(doc && doc.pdf_data) {
-                  marathiData.input = await htmlToJson(doc.pdf_data);
-                  delete marathiData.pdf_data
-            }
+                  const data = await htmlToJson(doc.pdf_data);
+//                  console.log(data)
+                  doc.pdf_info = data;
+                  delete doc.pdf_data;
+                  marathiData.push(doc)
+                  
+            } else { marathiData.push(doc) }
       }
+      console.log('marathiData', marathiData[0])
       const englishData = await Promise.all(marathiData.map(async (data) => {
             if (typeof data === 'string') {
                   return await convertMarathiToEnglish(data);
