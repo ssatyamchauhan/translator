@@ -1,7 +1,7 @@
 require('dotenv').config();
 const MongoClient = require('mongodb').MongoClient;
 const { htmlToJson } = require('./helper');
-const { convertMarathiToEnglish } = require('./marathiToEnglish');
+const { convertMarathiToEnglish } = require('./helper');
 
 const uri = process.env.MONGODB_URI;
 const dbName = process.env.MONGODB_DBNAME;
