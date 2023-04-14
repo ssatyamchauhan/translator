@@ -20,7 +20,8 @@ async function processBatchOfData(skip, limit) {
       let marathiData = await marathiDb.collection(marathiCollection).find().skip(skip).limit(limit).toArray();
       for(let doc of marathiData) {
             if(doc && doc.pdf_data) {
-                  marathiData.input = await htmlToJson(doc.pdf_data)
+                  marathiData.input = await htmlToJson(doc.pdf_data);
+                  delete marathiData.pdf_data
             }
       }
       const englishData = await Promise.all(marathiData.map(async (data) => {
