@@ -2,35 +2,48 @@ require('dotenv').config();
 const MongoClient = require('mongodb').MongoClient;
 const { htmlToJson } = require('./helper');
 const { convertMarathiToEnglish } = require('./helper');
+const { parentPort } = require('worker_threads');
+
 
 const uri = process.env.MONGODB_URI;
 const dbName = process.env.MONGODB_DBNAME;
 const marathiCollection = process.env.MONGODB_MARATHI_COLLECTION;
 const englishCollection = process.env.MONGODB_ENGLISH_COLLECTION;
 
-const client = new MongoClient(uri, { useNewUrlParser: true });
+let client = new MongoClient(uri, { useNewUrlParser: true });
+let mongoConnectionUrl = '';
+async function mongoConnection () {
+      if(mongoConnectionUrl) {
+            console.log('using old connection')
+            return mongoConnectionUrl
+      } else {
+            console.log('creating new connection')
+            mongoConnectionUrl = await client.connect();
+            console.log('Mongodb Connection Established Successfully!')
+            return mongoConnectionUrl;
+      }
+}
 const skip = 0;
 const limit = 1000;
 async function processBatchOfData(skip, limit) {
-      await client.connect();
-      console.log('Mongodb Connection Established Successfully!')
+      client = await mongoConnection();
 
       const marathiDb = client.db(dbName);
       const englishDb = client.db(dbName);
 
       const marathiDbData = await marathiDb.collection(marathiCollection).find().skip(skip).limit(limit).toArray();
-      if (marathiData && marathiData.length == 0) {
+      if (marathiDbData && marathiDbData.length == 0) {
             return false;
       }
       let marathiData = []
-      for(let doc of marathiDbData) {
-            if(doc && doc.pdf_data) {
+      for (let doc of marathiDbData) {
+            if (doc && doc.pdf_data) {
                   const data = await htmlToJson(doc.pdf_data);
-//                  console.log(data)
+                  //                  console.log(data)
                   doc.pdf_info = data;
                   delete doc.pdf_data;
                   marathiData.push(doc)
-                  
+
             } else { marathiData.push(doc) }
       }
       console.log('marathiData', marathiData[0])
@@ -84,13 +97,25 @@ async function convertNestedObjectToEnglish(obj) {
       return Object.fromEntries(keys.map((key, index) => [key, englishValues[index]]));
 }
 
-let interval = ""
 
-interval = setInterval(async () => {
-      const response = await processBatchOfData(0, limit);
-      if(response == false) {
-           clearInterval(interval); 
-      } else {
-            skip += limit
+
+parentPort.on('message', async ({ skip, limit }) => {
+      try {
+            const result = await processBatchOfData(skip, limit);
+            parentPort.postMessage({ success: true, result });
+      } catch (err) {
+            parentPort.postMessage({ success: false, error: err.message });
       }
-}, 20000);
+});
+
+
+// let interval = ""
+
+// interval = setInterval(async () => {
+//       const response = await processBatchOfData(0, limit);
+//       if (response == false) {
+//             clearInterval(interval);
+//       } else {
+//             skip += limit
+//       }
+// }, 20000);
