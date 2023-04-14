@@ -80,6 +80,6 @@ async function convertNestedObjectToEnglish(obj) {
       return Object.fromEntries(keys.map((key, index) => [key, englishValues[index]]));
 }
 
-(async () => {
+setInterval(async () => {
       await processBatchOfData(0, 1000);
-})();
+}, 20000);
