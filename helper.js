@@ -13,6 +13,7 @@ async function convertMarathiToEnglish(text_to_en) {
             if (text_to_en != null && text_to_en) {
                   const len = text_to_en.length;
                   if (len > 300) {
+                        console.log('if part executed......')
                         const chunks = [];
                         for (let i = 0; i < len; i += 300) {
                               chunks.push(text_to_en.substring(i, i + 300));
@@ -32,6 +33,7 @@ async function convertMarathiToEnglish(text_to_en) {
                         }
                         return text_to_return;
                   } else {
+                        console.log('else part is executed.....')
                         const response = await axios.get(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=mr&tl=en&dt=t&q=${text}`)
                         if (response.status == 200 && response.data && response.data.length) {
                               if (response.data[0] != null) {
