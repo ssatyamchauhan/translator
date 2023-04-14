@@ -52,22 +52,7 @@ function isNumeric(num) {
 }
 
 async function htmltoJson(text_to_en) {
-    //  console.log('text to htmltoJson', text_to_en)
-
     if (text_to_en != null) {
-        // const $ = cheerio.load(text_to_en);
-        // const tbody = await $("table.tblmargin > tbody > tr");
-        // const dataObj = {};
-        // const keys = ['DocType', 'Compensation', 'MarketPrice', 'SubDivisionHouseNo', 'Area', 'Levy', 'NameAndAddressPartyOfExecutingDocument', 'NameAndAddressOfDefedent', 'DocumentSubmissionDate', 'DateOfRegistrationDeed', 'SerialNumber', 'MarketRateStampDuty', 'MarketRateRegistrationFee', 'Shera', 'OtherDetails'];
-        // let index = 0;
-        // for (let el of tbody) {
-        //     let data = $(el).children("td:nth-child(2)").text();
-        //     dataObj[keys[index]] = await translate(data);
-        //     index += 1
-        // };
-        // return dataObj;
-
-
         const dataObj = {};
         const $ = cheerio.load(text_to_en);
         const top_tbody = await $("body > table:nth-child(1) > tbody > tr > td:nth-child(3) > table > tbody > tr:nth-child(1)");
