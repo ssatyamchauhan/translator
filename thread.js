@@ -9,7 +9,8 @@ const marathiCollection = process.env.MONGODB_MARATHI_COLLECTION;
 const englishCollection = process.env.MONGODB_ENGLISH_COLLECTION;
 
 const client = new MongoClient(uri, { useNewUrlParser: true });
-
+const skip = 0;
+const limit = 1000;
 async function processBatchOfData(skip, limit) {
       await client.connect();
       console.log('Mongodb Connection Established Successfully!')
@@ -81,5 +82,6 @@ async function convertNestedObjectToEnglish(obj) {
 }
 
 setInterval(async () => {
-      await processBatchOfData(0, 1000);
+      await processBatchOfData(0, limit);
+      skip += limit
 }, 20000);
