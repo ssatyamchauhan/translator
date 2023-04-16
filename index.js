@@ -93,7 +93,7 @@ async function main() {
                                     const status = cheerio_instance('h5').text();
                                     const description = cheerio_instance('h6').text();
                                     const page_url = $('h3 a').attr('href');
-                                    data.push({ name, status, description, page_url });
+                                    data.push({ name, status, description, page_url, page: page });
                               }
                               await Insert(table, data);
                         } else {
