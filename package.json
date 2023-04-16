@@ -1,0 +1,17 @@
+{
+  "name": "companydetailscrapper",
+  "version": "1.0.0",
+  "description": "A scrapper that scrapes company details from different websites across the google ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Satyam Singh",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.3.5",
+    "cheerio": "^1.0.0-rc.12",
+    "dotenv": "^16.0.3",
+    "mongodb": "^5.2.0"
+  }
+}
